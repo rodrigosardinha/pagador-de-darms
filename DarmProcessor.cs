@@ -22,11 +22,20 @@ namespace pagador_de_darms
         public List<string> GuiasProcessadas { get; private set; } = new List<string>();
         public List<string> AllSQLInserts { get; private set; } = new List<string>();
 
-        public DarmProcessor()
+        public DarmProcessor(string outputDir = null)
         {
             // Caminho da raiz do projeto (3 níveis acima do executável)
             BaseDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", ".."));
-            OutputDir = Path.Combine(BaseDir, "inserts");
+            
+            // Usar a pasta fornecida ou a pasta padrão
+            if (!string.IsNullOrEmpty(outputDir))
+            {
+                OutputDir = outputDir;
+            }
+            else
+            {
+                OutputDir = Path.Combine(BaseDir, "inserts");
+            }
             
             // Criar diretório de saída se não existir
             if (!Directory.Exists(OutputDir))

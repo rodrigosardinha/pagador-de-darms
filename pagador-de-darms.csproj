@@ -7,11 +7,27 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>icons\app.ico</ApplicationIcon>
+    <AssemblyTitle>Pagador de DARMs</AssemblyTitle>
+    <AssemblyDescription>Sistema para processamento de DARMs em PDF</AssemblyDescription>
+    <AssemblyCompany>Rodrigo Sardinha</AssemblyCompany>
+    <AssemblyProduct>Pagador de DARMs</AssemblyProduct>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="PDFsharp" Version="6.2.0" />
     <PackageReference Include="iTextSharp" Version="5.5.13.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="icons\*.png" />
+    <Content Include="icons\*.ico" />
   </ItemGroup>
 
 </Project>

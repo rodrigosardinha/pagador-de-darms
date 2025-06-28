@@ -57,6 +57,29 @@ public partial class Form1 : Form
             return;
         }
         
+        // Permitir que o usuário escolha onde salvar os arquivos
+        using (var folderDialog = new FolderBrowserDialog())
+        {
+            folderDialog.Description = "Selecione a pasta onde deseja salvar os arquivos SQL e relatórios";
+            folderDialog.ShowNewFolderButton = true;
+            
+            if (folderDialog.ShowDialog() == DialogResult.OK)
+            {
+                pastaSaida = Path.Combine(folderDialog.SelectedPath, "inserts");
+                pastaRelatorios = Path.Combine(folderDialog.SelectedPath, "relatorios");
+                
+                // Criar pastas se não existirem
+                if (!Directory.Exists(pastaSaida))
+                    Directory.CreateDirectory(pastaSaida);
+                if (!Directory.Exists(pastaRelatorios))
+                    Directory.CreateDirectory(pastaRelatorios);
+            }
+            else
+            {
+                return; // Usuário cancelou a seleção
+            }
+        }
+        
         processando = true;
         inicioProcessamento = DateTime.Now;
         arquivosProcessados = 0;
@@ -114,6 +137,8 @@ public partial class Form1 : Form
                 Application.DoEvents();
             });
 
+            // Criar novo processor com a pasta de saída escolhida
+            processor = new DarmProcessor(pastaSaida);
             dadosExtraidosPorArquivo.Clear();
             dadosExtraidosPorArquivo.AddRange(await processor.ProcessarDarmsComRetornoAsync(pastaDarms, progress));
             
@@ -183,11 +208,16 @@ public partial class Form1 : Form
 
     private void btnAbrirPasta_Click(object sender, EventArgs e)
     {
-        // Caminho da raiz do projeto (3 níveis acima do executável)
-        string pastaCompleta = Path.Combine(Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..")), pastaSaida);
-        if (!Directory.Exists(pastaCompleta))
-            Directory.CreateDirectory(pastaCompleta);
-        Process.Start("explorer.exe", pastaCompleta);
+        // Abrir a pasta de saída escolhida pelo usuário
+        if (!string.IsNullOrEmpty(pastaSaida) && Directory.Exists(pastaSaida))
+        {
+            Process.Start("explorer.exe", pastaSaida);
+        }
+        else
+        {
+            MessageBox.Show("Nenhuma pasta de saída configurada. Execute o processamento primeiro.", 
+                "Pasta não encontrada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
 
     private async void btnReprocessar_Click(object sender, EventArgs e)
